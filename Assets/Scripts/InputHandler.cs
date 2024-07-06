@@ -1,10 +1,6 @@
 using System;
-using System.Reflection;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using uOSC;
-using static UnityEngine.GraphicsBuffer;
 
 
 namespace DesktopLikeOperationVMT
@@ -27,8 +23,24 @@ namespace DesktopLikeOperationVMT
         public void ToggleState()
         {
             IsActive = !IsActive;
-            if(!IsActive)
+
+            if (IsActive)
+            {
+                CursorLock(true);
+            }
+            else
+            {
                 OnStop();
+                CursorLock(false);
+            }
+        }
+
+        void CursorLock(bool cursorLock)
+        {
+            if (cursorLock)
+                Cursor.lockState = CursorLockMode.Locked;
+            else
+                Cursor.lockState = CursorLockMode.None;
         }
 
         void OnStop()
@@ -85,6 +97,8 @@ namespace DesktopLikeOperationVMT
             bundle.Add(_action.ClickButtonB(_input.ButtonB, false));
 
             _client.Send(bundle);
+
+            if (_input.EscKey) CursorLock(false);
         }
 
         void DebugButtonInput(bool buttonInput, string text)

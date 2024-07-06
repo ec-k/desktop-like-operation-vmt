@@ -17,5 +17,7 @@ namespace DesktopLikeOperationVMT
         public bool SystemToggleButton => Input.GetKey(KeyCode.Z);
         public bool ButtonA => Input.GetKey(KeyCode.X);
         public bool ButtonB => Input.GetKey(KeyCode.C);
+
+        public bool EscKey => Input.GetKey(KeyCode.Escape);
     }
 }
