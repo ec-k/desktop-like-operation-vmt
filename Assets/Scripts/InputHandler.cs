@@ -1,6 +1,10 @@
 using System;
+using System.Reflection;
+using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using uOSC;
+using static UnityEngine.GraphicsBuffer;
 
 
 namespace DesktopLikeOperationVMT
@@ -18,6 +22,28 @@ namespace DesktopLikeOperationVMT
 
         const string _moveAddress = "/VMT/Room/Unity";
 
+        public bool IsActive { get; private set; }
+
+        public void ToggleState()
+        {
+            IsActive = !IsActive;
+            if(!IsActive)
+                OnStop();
+        }
+
+        void OnStop()
+        {
+            DisableTracker(Settings.HeadIndex);
+            DisableTracker(Settings.LeftHandIndex);
+            DisableTracker(Settings.RightHandIndex);
+        }
+        void DisableTracker(int index)
+        {
+            _client.Send(_moveAddress, index, (int)0, 0f,
+                0f, 0f, 0f,
+                0f, 0f, 0f, 0f
+                );
+        }
 
         void Start()
         {
@@ -31,6 +57,8 @@ namespace DesktopLikeOperationVMT
 
         void FixedUpdate()
         {
+            if (!IsActive) return;
+
             if (_input.UpMoveButton) Move(_action.MoveForward);
             if (_input.DownMoveButton) Move(_action.MoveBackward);
             if (_input.LeftMoveButton) Move(_action.MoveLeft);
@@ -48,6 +76,8 @@ namespace DesktopLikeOperationVMT
 
         private void Update()
         {
+            if(!IsActive) return;
+
             var bundle = new Bundle(Timestamp.Now);
             bundle.Add(_action.ClickTrigger(_input.MouseLeftClick, true));
             bundle.Add(_action.ClickSystem(_input.SystemToggleButton, false));
