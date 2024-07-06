@@ -41,7 +41,8 @@ namespace DesktopLikeOperationVMT
         public void RotatePitch(float mouse_y, Transform target)
         {
             var rotationAmount = mouse_y * Settings.MouseSensitivity;
-            target.localRotation = Quaternion.AngleAxis(-rotationAmount, target.right) * target.localRotation;
+            var rot = Quaternion.AngleAxis(-rotationAmount, target.right) * target.localRotation;
+            target.localRotation = Utils.RotationClamp(rot);
         }
 
         public Message ClickTrigger(bool isHeld, bool isLeft)
