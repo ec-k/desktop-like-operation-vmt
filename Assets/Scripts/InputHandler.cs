@@ -42,18 +42,19 @@ namespace DesktopLikeOperationVMT
             Rotate(mouse_y, _action.RotatePitch);
 
             SendTargetTransform(_client, Settings.HeadIndex, TrackerEnables.TRACKER, _headTarget);
-            SendTargetTransform(_client, Settings.LeftHandIndex, TrackerEnables.CONTROLLER_L, _leftHandTarget);
-            SendTargetTransform(_client, Settings.RightHandIndex, TrackerEnables.CONTROLLER_R, _rightHandTarget);
+            SendTargetTransform(_client, Settings.LeftHandIndex, TrackerEnables.CONTROLLER_L_COMPATIBLE, _leftHandTarget);
+            SendTargetTransform(_client, Settings.RightHandIndex, TrackerEnables.CONTROLLER_R_COMPATIBLE, _rightHandTarget);
         }
 
         private void Update()
         {
-            //if(_input.MouseLeftClick) PressButton(_client, _input.MouseLeftClick, true, _action.ClickTrigger);
-            PressButton(_client, _input.MouseLeftClick, true, _action.ClickTrigger);
-            //DebugButtonInput(_input.MouseLeftClick, "LeftClick");
-            //if (_input.SystemToggleButton) PressButton(_client, _input.SystemToggleButton, false, _action.ClickSystem);
-            PressButton(_client, _input.SystemToggleButton, false, _action.ClickSystem);
-            //DebugButtonInput(_input.SystemToggleButton, "SystemToggleButton");
+            var bundle = new Bundle(Timestamp.Now);
+            bundle.Add(_action.ClickTrigger(_input.MouseLeftClick, true));
+            bundle.Add(_action.ClickSystem(_input.SystemToggleButton, false));
+            bundle.Add(_action.ClickButtonA(_input.ButtonA, false));
+            bundle.Add(_action.ClickButtonB(_input.ButtonB, false));
+
+            _client.Send(bundle);
         }
 
         void DebugButtonInput(bool buttonInput, string text)
