@@ -9,28 +9,28 @@ namespace DesktopLikeOperationVMT
 
         public void MoveForward(Transform target)
         {
-            target.position += new Vector3(0f, 0f, Settings.MoveVelocity);
+            target.position += Settings.MoveVelocity * target.forward;
         }
         public void MoveBackward(Transform target)
         {
-            target.position += new Vector3(0f, 0f, -Settings.MoveVelocity);
+            target.position += -Settings.MoveVelocity * target.forward;
         }
         public void MoveUp(Transform target)
         {
-            target.position += new Vector3(0f, Settings.MoveVelocity, 0f);
+            target.position += Settings.MoveVelocity * target.up;
         }
         public void MoveDown(Transform target)
         {
-            target.position += new Vector3(0f, -Settings.MoveVelocity, 0f);
+            target.position += -Settings.MoveVelocity * target.up;
         }
         public void MoveLeft(Transform target)
         {
-            target.position += new Vector3(-Settings.MoveVelocity, 0f, 0f);
+            target.position += -Settings.MoveVelocity * target.right;
         }
 
         public void MoveRight(Transform target)
         {
-            target.position += new Vector3(Settings.MoveVelocity, 0f, 0f);
+            target.position += Settings.MoveVelocity * target.right;
         }
 
         public void RotateYaw(float mouse_x, Transform target)
